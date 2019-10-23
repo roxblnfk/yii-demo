@@ -1,5 +1,5 @@
 <?php
-namespace App\Console\Command;
+namespace App\Console\Command\Migrate;
 
 use Spiral\Migrations\Config\MigrationConfig;
 use Spiral\Migrations\Migrator;
@@ -8,7 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateList extends Command
+class ListCommand extends Command
 {
     protected static $defaultName = 'migrate/list';
 
@@ -37,7 +37,7 @@ class MigrateList extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $list = $this->migrator->getMigrations();
-        $output->writeln('<fg=green>' . count($list) . ' migrations found in ' . $this->config->getDirectory() . ':</fg=green>');
+        $output->writeln('<info>' . count($list) . ' migrations found in ' . $this->config->getDirectory() . '</info>');
 
         $statuses = [
             State::STATUS_UNDEFINED => 'undefined',

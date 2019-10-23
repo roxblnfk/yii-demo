@@ -1,10 +1,7 @@
 <?php
 
 use App\Console\Command\CreateUser;
-use App\Console\Command\MigrateDown;
-use App\Console\Command\MigrateGenerate;
-use App\Console\Command\MigrateList;
-use App\Console\Command\MigrateUp;
+use App\Console\Command\Migrate;
 
 return [
     'mailer.host' => 'smtp.example.com',
@@ -17,10 +14,11 @@ return [
 
     'commands' => [
         'user/create' => CreateUser::class,
-        'migrate/generate' => MigrateGenerate::class,
-        'migrate/up' => MigrateUp::class,
-        'migrate/down' => MigrateDown::class,
-        'migrate/list' => MigrateList::class,
+        'migrate/create' => Migrate\CreateCommand::class,
+        'migrate/generate' => Migrate\GenerateCommand::class,
+        'migrate/up' => Migrate\UpCommand::class,
+        'migrate/down' => Migrate\DownCommand::class,
+        'migrate/list' => Migrate\ListCommand::class,
     ],
 
     'entityPaths' => [

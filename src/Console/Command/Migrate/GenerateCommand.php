@@ -1,5 +1,5 @@
 <?php
-namespace App\Console\Command;
+namespace App\Console\Command\Migrate;
 
 use App\Helper\CycleOrmHelper;
 use Spiral\Migrations\Migrator;
@@ -9,7 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateGenerate extends Command
+class GenerateCommand extends Command
 {
     protected static $defaultName = 'migrate/generate';
 
@@ -41,14 +41,27 @@ class MigrateGenerate extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         // check existing unapplied migrations
-        $list = $this->migrator->getMigrations();
-        foreach ($list as $migration) {
+        $listAfter = $this->migrator->getMigrations();
+        foreach ($listAfter as $migration) {
             if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
                 $output->writeln('<fg=red>Outstanding migrations found, run `migrate/up` first.</fg=red>');
                 return;
             }
         }
+        // run generator
+        $this->cycleHelper->generateMigrations($this->migrator, $this->config);
 
-        $this->cycleHelper->generateMigration($this->migrator, $this->config);
+        $listBefore = $this->migrator->getMigrations();
+        $added = count($listBefore) - count($listAfter);
+        $output->writeln("<info>Added {$added} file(s)</info>");
+
+        // print added migrations
+        if ($added > 0) {
+            foreach ($listBefore as $migration) {
+                if ($migration->getState()->getStatus() !== State::STATUS_EXECUTED) {
+                    $output->writeln($migration->getState()->getName());
+                }
+            }
+        }
     }
 }

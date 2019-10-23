@@ -65,7 +65,7 @@ class CycleOrmHelper
         $this->cache->delete($this->cacheKey);
     }
 
-    public function generateMigration(Migrator $migrator, MigrationConfig $config): void
+    public function generateMigrations(Migrator $migrator, MigrationConfig $config): void
     {
         $classLocator = $this->getEntityClassLocator();
 

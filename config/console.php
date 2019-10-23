@@ -21,7 +21,7 @@ return [
         $aliases = $container->get(Aliases::class);
         return new MigrationConfig([
             'directory' => $aliases->get('@src/Console/Migration'),
-            'namespace' => 'App\Console\Migration',
+            'namespace' => 'App\\Console\\Migration',
             'table' => 'migration',
             'safe' => false,
         ]);

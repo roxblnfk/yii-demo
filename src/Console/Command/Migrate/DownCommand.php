@@ -1,5 +1,5 @@
 <?php
-namespace App\Console\Command;
+namespace App\Console\Command\Migrate;
 
 use App\Helper\CycleOrmHelper;
 use Spiral\Migrations\Config\MigrationConfig;
@@ -10,7 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateDown extends Command
+class DownCommand extends Command
 {
     protected static $defaultName = 'migrate/down';
 
@@ -49,7 +49,7 @@ class MigrateDown extends Command
         $this->cycleOrmHelper->dropCurrentSchemaCache();
 
         $list = $this->migrator->getMigrations();
-        $output->writeln('<fg=green>' . count($list) . ' migrations found in ' . $this->config->getDirectory() . '</fg=green>');
+        $output->writeln('<info>' . count($list) . ' migrations found in ' . $this->config->getDirectory() . '</info>');
 
         $statuses = [
             State::STATUS_UNDEFINED => 'undefined',
@@ -67,8 +67,7 @@ class MigrateDown extends Command
             $output->writeln($state->getName() . ': ' . ($statuses[$status] ?? $status));
         } catch (\Throwable $e) {
             $output->writeln([
-                '===================',
-                'Error!',
+                '<fg=red>Error!</fg=red>',
                 $e->getMessage(),
             ]);
             return;

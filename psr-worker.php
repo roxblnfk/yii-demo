@@ -17,15 +17,16 @@ $psr7 = new RoadRunner\PSR7Client($worker);
 // Don't do it in production, assembling takes it's time
 Builder::rebuild();
 
-$container = new Container(require Builder::path('web'));
-
-$container->set(Spiral\RoadRunner\PSR7Client::class, $psr7);
-$container->set(\Yiisoft\Yii\Web\Emitter\EmitterInterface::class, \App\Emitter\RoadrunnerEmitter::class);
-
 while ($request = $psr7->acceptRequest()) {
+    $container = new Container(require Builder::path('web'));
+
+    $container->set(Spiral\RoadRunner\PSR7Client::class, $psr7);
+    $container->set(\Yiisoft\Yii\Web\Emitter\EmitterInterface::class, \App\Emitter\RoadrunnerEmitter::class);
+
     try {
         $container->get(Application::class)->handle($request);
     } catch (\Throwable $e) {
         $psr7->getWorker()->error((string)$e);
     }
+    unset($container);
 }

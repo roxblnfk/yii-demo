@@ -2,6 +2,10 @@
 
 use App\Factory\LoggerFactory;
 use App\Factory\MailerFactory;
+use App\Factory\Service2Factory;
+use App\Factory\Service3Factory;
+use App\Service\TestService2;
+use App\Service\TestService3;
 use Psr\Log\LoggerInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Cache\ArrayCache;
@@ -38,4 +42,7 @@ return [
         'setPassword()' => [$params['mailer']['password']],
     ],
     MailerInterface::class => new MailerFactory(),
+
+    TestService2::class => new Service2Factory($params['cycle.dbal'], $params['cycle.common'], $params['cycle.migrations']),
+    TestService3::class => new Service3Factory(),
 ];

@@ -73,5 +73,8 @@
                 "config/console.php"
             ]
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

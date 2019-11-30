@@ -40,6 +40,9 @@ use Yiisoft\Html\Html;
                 <a class="nav-link" href="<?= $urlGenerator->generate('site/login') ?>">Login</a>
             </li>
             <?php endif ?>
+            <li class="nav-item">
+                <a class="nav-link" href="/test">RUN TEST</a>
+            </li>
 
         </ul>
     </div>

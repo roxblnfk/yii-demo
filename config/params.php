@@ -62,6 +62,21 @@ return [
             ]
         ],
     ],
+    \App\CycleDbalConfig3::class => [
+        'default' => 'default',
+        'aliases' => [],
+        'databases' => [
+            'default' => ['connection' => 'sqlite']
+        ],
+        'connections' => [
+            'sqlite' => [
+                'driver' => \Spiral\Database\Driver\SQLite\SQLiteDriver::class,
+                'connection' => 'sqlite:@runtime/database.db',
+                'username' => '',
+                'password' => '',
+            ]
+        ],
+    ],
     // cycle common config
     'cycle.common' => [
         'entityPaths' => [
@@ -69,6 +84,11 @@ return [
         ],
     ],
     CycleCommonConfig::class => [
+        'entityPaths' => [
+            '@src/Entity'
+        ],
+    ],
+    \App\CycleCommonConfig3::class => [
         'entityPaths' => [
             '@src/Entity'
         ],
@@ -81,6 +101,12 @@ return [
         'safe' => false,
     ],
     CycleMigrationConfig::class => [
+        'directory' => '@root/migrations',
+        'namespace' => 'App\\Migration',
+        'table' => 'migration',
+        'safe' => false,
+    ],
+    \App\CycleMigrationConfig3::class => [
         'directory' => '@root/migrations',
         'namespace' => 'App\\Migration',
         'table' => 'migration',

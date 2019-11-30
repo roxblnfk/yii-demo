@@ -2,25 +2,25 @@
 
 namespace App\Service;
 
-use Yiisoft\Yii\Cycle\CycleCommonConfig;
-use Yiisoft\Yii\Cycle\CycleDbalConfig;
-use Yiisoft\Yii\Cycle\CycleMigrationConfig;
+use App\CycleCommonConfig3;
+use App\CycleDbalConfig3;
+use App\CycleMigrationConfig3;
 
 class TestService3
 {
     /**
-     * @var CycleDbalConfig
+     * @var CycleDbalConfig3
      */
     private $dbal;
     /**
-     * @var CycleCommonConfig
+     * @var CycleCommonConfig3
      */
     private $common;
     /**
-     * @var CycleMigrationConfig
+     * @var CycleMigrationConfig3
      */
     private $migrations;
-    public function __construct(CycleDbalConfig $dbal, CycleCommonConfig $common, CycleMigrationConfig $migrations)
+    public function __construct(CycleDbalConfig3 $dbal, CycleCommonConfig3 $common, CycleMigrationConfig3 $migrations)
     {
 
         $this->dbal = $dbal;

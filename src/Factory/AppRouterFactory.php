@@ -24,10 +24,6 @@ class AppRouterFactory
                 ->to(new ActionCaller(ContactController::class, 'contact', $container))
                 ->name('site/contact')
             ,
-            Route::get('/test/{id:\w+}')
-                ->to(new ActionCaller(SiteController::class, 'testParameter', $container))
-                ->name('site/test')
-            ,
 
             Route::methods([Method::GET, Method::POST], '/login')
                 ->to(new ActionCaller(AuthController::class, 'login', $container))
@@ -36,6 +32,10 @@ class AppRouterFactory
             Route::get('/logout')
                 ->to(new ActionCaller(AuthController::class, 'logout', $container))
                 ->name('site/logout')
+            ,
+            Route::get('/test')
+                ->to(new ActionCaller(SiteController::class, 'runPerformanceTest', $container))
+                ->name('site/test')
             ,
         ];
 

@@ -16,6 +16,6 @@ class PostTag
      * @Column(type="primary")
      */
     private ?int $id = null;
-    private $post_id = null;
-    private $tag_id = null;
+    private ?int $post_id = null;
+    private ?int $tag_id = null;
 }

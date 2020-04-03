@@ -10,10 +10,14 @@ use App\Controller\AuthController;
 use App\Controller\ContactController;
 use App\Controller\SiteController;
 use App\Controller\UserController;
-use App\Middleware\ActionCaller;
+use App\Middleware\ActionCaller as Action;
 use App\Middleware\SetFormat;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Yiisoft\Http\Method;
+use Yiisoft\Injector\Injector;
 use Yiisoft\Router\FastRoute\UrlMatcher;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
@@ -24,6 +28,21 @@ class AppRouterFactory
 {
     public function __invoke(ContainerInterface $container)
     {
+        $mw = static function (
+            string $class,
+            array $constructor = [],
+            string $method = 'process',
+            array $params = []
+        ) use ($container) {
+            return static function (
+                ServerRequestInterface $request,
+                RequestHandlerInterface $handler
+            ) use ($container, $class, $constructor, $method, $params): ResponseInterface {
+                $params += ['request' => $request, 'handler' => $handler];
+                return (new Injector($container))->invoke([new $class(...$constructor), $method], $params);
+            };
+        };
+
         $routes = [
             // Lonely pages of site
             Route::get('/', [SiteController::class, 'index'])
@@ -60,18 +79,18 @@ class AppRouterFactory
                 Group::create('/archive', [
                     // Index page
                     Group::create('', [
-                        Route::get('', [new ActionCaller(ArchiveController::class, 'index', $container), 'process'])
-                            ->addMiddleware([new SetFormat('html', null), 'process'])
+                        Route::get('', $mw(Action::class, [ArchiveController::class, 'index', $container]))
+                            ->addMiddleware($mw(SetFormat::class, ['html', null]))
                             ->name('blog/archive/index'),
-                        Route::get('/print_r', [new ActionCaller(ArchiveController::class, 'index', $container), 'process'])
-                            ->addMiddleware([new SetFormat('print_r'), 'process'])
+                        Route::get('/print_r', $mw(Action::class, [ArchiveController::class, 'index', $container]))
+                            ->addMiddleware($mw(SetFormat::class, ['print_r']))
                             ->name('blog/archive/index/print_r'),
-                        Route::get('/xml', [new ActionCaller(ArchiveController::class, 'index', $container), 'process'])
-                            ->addMiddleware([new SetFormat('xml'), 'process'])
+                        Route::get('/xml', $mw(Action::class, [ArchiveController::class, 'index', $container]))
+                            ->addMiddleware($mw(SetFormat::class, ['xml']))
                             ->name('blog/archive/index/xml'),
-                        Route::get('/json', [new ActionCaller(ArchiveController::class, 'index', $container), 'process'])
+                        Route::get('/json', $mw(Action::class, [ArchiveController::class, 'index', $container]))
                             ->name('blog/archive/index/json'),
-                        Route::get('/custom', [new ActionCaller(ArchiveController::class, 'custom', $container), 'process'])
+                        Route::get('/custom', $mw(Action::class, [ArchiveController::class, 'index', $container]))
                             ->name('blog/archive/index/custom'),
                     ]),
                     // Yearly page
@@ -80,7 +99,8 @@ class AppRouterFactory
                     // Monthly page
                     Route::get('/{year:\d+}-{month:\d+}[/page{page:\d+}]', [ArchiveController::class, 'monthlyArchive'])
                         ->name('blog/archive/month')
-                ])->addMiddleware([new SetFormat('json'), 'process']),
+                ])
+                    ->addMiddleware($mw(SetFormat::class, ['json']))
             ]),
         ];
 

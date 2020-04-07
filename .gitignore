@@ -25,3 +25,6 @@ phpunit.phar
 /vendor
 /composer.lock
 /node_modules
+
+package.json
+package-lock.json

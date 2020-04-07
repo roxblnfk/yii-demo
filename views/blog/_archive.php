@@ -42,6 +42,7 @@ use Yiisoft\Html\Html;
             $currentYear = $year;
         }
         echo Html::a('Open archive', $urlGenerator->generate('blog/archive/index'), ['class' => 'mt-2']);
+        echo Html::a('Open archive (Streams)', $urlGenerator->generate('blog/archive/indexStreams'), ['class' => 'mt-2']);
         echo $blockEnd;
     } else {
         echo $blockBegin, 'No records', $blockEnd;

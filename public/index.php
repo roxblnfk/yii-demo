@@ -1,7 +1,7 @@
 <?php
 
-use Yiisoft\Composer\Config\Builder;
 use Psr\Container\ContainerInterface;
+use Yiisoft\Composer\Config\Builder;
 use Yiisoft\Di\Container;
 use Yiisoft\Http\Method;
 use Yiisoft\Yii\Web\Application;
@@ -12,7 +12,7 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 // Don't do it in production, assembling takes it's time
 Builder::rebuild(dirname(__DIR__));
-
+$startTime = microtime(true);
 $container = new Container(
     require Builder::path('web', dirname(__DIR__)),
     require Builder::path('providers', dirname(__DIR__))
@@ -24,6 +24,7 @@ require_once dirname(__DIR__) . '/src/globals.php';
 $application = $container->get(Application::class);
 
 $request = $container->get(ServerRequestFactory::class)->createFromGlobals();
+$request = $request->withAttribute('applicationStartTime', $startTime);
 
 try {
     $application->start();
@@ -31,5 +32,6 @@ try {
     $emitter = new SapiEmitter();
     $emitter->emit($response, $request->getMethod() === Method::HEAD);
 } finally {
+    $application->afterEmit($response);
     $application->shutdown();
 }

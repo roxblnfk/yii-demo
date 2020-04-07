@@ -15,7 +15,29 @@ $pagination = OffsetPagination::widget()
 
 echo Html::tag('h1', 'Users');
 echo Html::tag('p', 'Total users: ' . $paginator->getTotalItems(), ['class' => 'text-muted']);
-
+echo Html::a(
+    'API v1 Info',
+    $urlGenerator->generate('api/info/v1'),
+    ['class' => 'btn btn-link']
+), '|', Html::a(
+    '[stream]',
+    $urlGenerator->generate('s-api/info/v1'),
+    ['class' => 'btn btn-link']
+), '<br>';
+echo Html::a(
+    'API v2 Info',
+    $urlGenerator->generate('api/info/v2'),
+    ['class' => 'btn btn-link']
+), '<br>';
+echo Html::a(
+    'API Users List Data',
+    $urlGenerator->generate('api/user/index'),
+    ['class' => 'btn btn-link']
+), '|', Html::a(
+    '[stream]',
+    $urlGenerator->generate('s-api/user/index'),
+    ['class' => 'btn btn-link']
+), '<br>';
 ?>
 <table class="table table-hover">
     <thead>
@@ -33,6 +55,15 @@ foreach ($paginator->read() as $item) {
     echo Html::a(
         Html::encode($item->getLogin()),
         $urlGenerator->generate('user/profile', ['login' => $item->getLogin()]),
+        ['class' => 'btn btn-link']
+    );
+    echo Html::a(
+        Html::encode('API User Data'),
+        $urlGenerator->generate('api/user/profile', ['login' => $item->getLogin()]),
+        ['class' => 'btn btn-link']
+    ), '|', Html::a(
+        Html::encode('[stream]'),
+        $urlGenerator->generate('s-api/user/profile', ['login' => $item->getLogin()]),
         ['class' => 'btn btn-link']
     );
     echo Html::endTag('td');
